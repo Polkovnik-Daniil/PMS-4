@@ -21,18 +21,23 @@ public class MainActivitySecond extends AppCompatActivity {
     private static Intent intent = null, nextIntent = null;
     private static EditText editText = null, editTextFirst= null;
 
+    public static Bundle SavedInstanceState = null;
+
     private static String passportnumberS = null, dateS = null, sexS = null;
     public static String EXTRA_PASSPORTNUMBER = "EXTRA_PASSPORTNUMBER";
     public static String EXTRA_DATE = "EXTRA_DATE";
     public static String EXTRA_SEX = "EXTRA_SEX";
 
+    public static DATA data = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_second);
-
+        data = DATA.getInstance();
         intent = getIntent();
+
+        SavedInstanceState = savedInstanceState;
 
         radioGroup = findViewById(R.id.radioGroup);
 
@@ -50,13 +55,16 @@ public class MainActivitySecond extends AppCompatActivity {
 
             editText = findViewById(R.id.passportnumber);
             passportnumberS = editText.getText().toString();
+            data.passportNumber = passportnumberS;
             nextIntent.putExtra(EXTRA_PASSPORTNUMBER, passportnumberS);
 
             editTextFirst = findViewById(R.id.date);
             dateS = editTextFirst.getText().toString();
+            data.data = dateS;
             nextIntent.putExtra(EXTRA_DATE, dateS);
 
             sexS = radioGroup.getCheckedRadioButtonId() == 0 ? "Man" : "Woman";
+            data.Sex = radioGroup.getCheckedRadioButtonId() == 0 ? "Man" : "Woman";
             nextIntent.putExtra(EXTRA_SEX, sexS);
 
             nextIntent.putExtra(MainActivity.EXTRA_MARRIED, intent.getStringExtra(MainActivity.EXTRA_MARRIED));
