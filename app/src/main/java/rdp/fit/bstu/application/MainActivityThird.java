@@ -44,19 +44,9 @@ public class MainActivityThird extends AppCompatActivity {
             textView = (TextView)findViewById(R.id.result);
             textView.setText(result);
             FileWriter fWriter;
-            File sdCardFile = new File(Environment.getExternalStorageDirectory() + "\\filename.txt");
+            File sdCardFile = new File("filename.txt");
             if(!isFileExists(sdCardFile)){
-                JSONObject object = new JSONObject();
-                object.put("NAME", intent.getStringExtra(MainActivity.EXTRA_NAME));
-                object.put("SURNAME", intent.getStringExtra(MainActivity.EXTRA_SURNAME));
-                object.put("MARRIED", intent.getStringExtra(MainActivity.EXTRA_MARRIED) == "true" ? "Married" : "Not Married");
-                object.put("DATE", intent.getStringExtra(MainActivitySecond.EXTRA_DATE));
-                object.put("PASSPORTNUMBER", intent.getStringExtra(MainActivitySecond.EXTRA_PASSPORTNUMBER));
-                object.put("SEX", intent.getStringExtra(MainActivitySecond.EXTRA_SEX));
-                fWriter = new FileWriter(sdCardFile, true);
-                fWriter.write(object.toString());
-                fWriter.flush();
-                fWriter.close();
+                Serialize.Serialize("filename.txt",DATA.getInstance());
                 return;
             }
 

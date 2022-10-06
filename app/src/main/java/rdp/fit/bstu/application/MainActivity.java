@@ -2,24 +2,30 @@ package rdp.fit.bstu.application;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private static Button next = null;
     private static TextInputLayout name = null, surname = null;
+    private TextView textView = null;
     private static String nameS = null, surnameS = null;
     private static Intent intent = null;
     private static boolean married = false;
@@ -35,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         data = DATA.getInstance();
         try {
-            data = Serialize.Desirialise("filename.json");
-        } catch (IOException e) {
+            DATA.DeSerializable();
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         next = (Button) findViewById(R.id.nextMAF1);
@@ -46,6 +52,24 @@ public class MainActivity extends AppCompatActivity {
                 MainActivitySecond();
             }
         });
+        name = findViewById(R.id.name);
+        name.getEditText().setText(data.name);
+        surname = findViewById(R.id.surname);
+        surname.getEditText().setText(data.surName);
+        CheckBox married =  findViewById(R.id.married);
+        married.setChecked(data.Married == "true" ? true : false);
+    }
+    public void onClickPhoto(View view){
+        try{
+            Intent intent = new
+                Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(intent, 1);
+        }
+        }catch (Exception exception){
+            textView = (TextView) findViewById(R.id.textView);
+            textView.setText("!WAS CLICKED!");
+        }
 
     }
 
@@ -96,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         data.name = name.getEditText().getText().toString();
 //        surnameS = surname.getEditText().getText().toString();
         data.surName = surname.getEditText().getText().toString();
-        data.Married = married;
+        data.Married = married == true ? "true" : "false";
     }
 
     protected void onSaveInstanceState(Bundle outState){
@@ -114,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 //        surnameS = savedInstanceState.getString("surnameS");
         data.surName = savedInstanceState.getString("surnameS");
         married = savedInstanceState.getString("married") == "true" ? true : false;
-        data.Married = married;
+        data.Married = married == true ? "true" : "false";
         name = findViewById(R.id.name);
         surname = findViewById(R.id.surname);
 
@@ -122,6 +146,6 @@ public class MainActivity extends AppCompatActivity {
         surname.getEditText().setText(data.surName);//surnameS
 
         CheckBox checkBox = findViewById(R.id.married);
-        checkBox.setChecked(data.Married);//married
+        checkBox.setChecked(data.Married == "true" ? true : false);//married
     }
 }

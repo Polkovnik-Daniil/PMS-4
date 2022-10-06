@@ -18,6 +18,7 @@ public class MainActivitySecond extends AppCompatActivity {
     private static TextInputLayout name = null, surname = null;
     private static TextView textView = null;
     private static RadioGroup radioGroup = null;
+    private static Button email = null;
     private static Intent intent = null, nextIntent = null;
     private static EditText editText = null, editTextFirst= null;
 
@@ -48,6 +49,16 @@ public class MainActivitySecond extends AppCompatActivity {
                 MainActivityThird();
             }
         });
+        email = findViewById(R.id.email);
+        email.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_APP_EMAIL);
+                startActivity(intent);
+                Log.d("EMAIL","WAS CLICK!");
+            }
+        });
     }
     public void MainActivityThird(){
         try {
@@ -60,7 +71,7 @@ public class MainActivitySecond extends AppCompatActivity {
 
             editTextFirst = findViewById(R.id.date);
             dateS = editTextFirst.getText().toString();
-            data.data = dateS;
+            data.date = dateS;
             nextIntent.putExtra(EXTRA_DATE, dateS);
 
             sexS = radioGroup.getCheckedRadioButtonId() == 0 ? "Man" : "Woman";

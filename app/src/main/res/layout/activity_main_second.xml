@@ -69,5 +69,30 @@
 
     </RadioGroup>
 
+    <Button
+        android:id="@+id/email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        app:layout_constraintBottom_toTopOf="@+id/nextMAF2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.184"
+        app:layout_constraintStart_toEndOf="@+id/radioGroup"
+        app:layout_constraintTop_toBottomOf="@+id/passportnumber"
+        app:layout_constraintVertical_bias="0.186" />
+
+    <EditText
+        android:id="@+id/Phone"
+        android:layout_width="368dp"
+        android:layout_height="44dp"
+        android:ems="10"
+        android:inputType="phone"
+        app:layout_constraintBottom_toTopOf="@+id/nextMAF2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.372"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+        app:layout_constraintVertical_bias="0.145" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
