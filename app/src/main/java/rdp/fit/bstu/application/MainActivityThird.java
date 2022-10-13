@@ -4,56 +4,104 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
-import org.json.JSONObject;
-
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 
 public class MainActivityThird extends AppCompatActivity {
-    private Intent intent = null;
-    private String result = null;
-    private TextView textView = null;
-
-    // Метод проверки, существует ли файл и не является ли он каталогом
     public static boolean isFileExists(File file) {
         return file.exists() && !file.isDirectory();
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main_third);
+        TextView textView = (TextView)findViewById(R.id.result);
         try {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main_third);
 
-            intent = getIntent();
+            Intent intent = getIntent();
+            //можно занести в метод итд но мне лень
+            Button button = (Button) findViewById(R.id.name);
+            button.setText("Name: "+intent.getStringExtra(MainActivity._name_intent));
+            button.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    Activity(true);
+                }
+            });
 
-            result = " ";
-            result += "\nNAME:\t\t"+intent.getStringExtra(MainActivity.EXTRA_NAME);
-            result += "\nSURNAME:\t\t"+intent.getStringExtra(MainActivity.EXTRA_SURNAME);
+            button = null;
+            button = (Button) findViewById(R.id.surname);
+            button.setText("Surname: "+intent.getStringExtra(MainActivity._surname_intent));
+            button.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    Activity(true);
+                }
+            });
 
-            result += "\nMARRIED:\t\t"+intent.getStringExtra(MainActivity.EXTRA_MARRIED) == "true" ? "Married" : "Not Married";
-            result += "\nDATE:\t\t"+intent.getStringExtra(MainActivitySecond.EXTRA_DATE);
-            result += "\nSEX:\t\t"+intent.getStringExtra(MainActivitySecond.EXTRA_SEX);
-            result += "\nPASSPORTNUMBER:\t\t"+intent.getStringExtra(MainActivitySecond.EXTRA_PASSPORTNUMBER);
+            button = null;
+            button = (Button) findViewById(R.id.married);
+            button.setText("married: "+intent.getStringExtra(MainActivity._married_intent));
+            button.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    Activity(true);
+                }
+            });
 
-            textView = (TextView)findViewById(R.id.result);
-            textView.setText(result);
-            FileWriter fWriter;
-            File sdCardFile = new File("filename.txt");
-            if(!isFileExists(sdCardFile)){
-                Serialize.Serialize("filename.txt",DATA.getInstance());
-                return;
-            }
+            button = null;
+            button = (Button) findViewById(R.id.passportnumber);
+            button.setText("Passnum: "+intent.getStringExtra(MainActivitySecond._passportnumber_intent));
+            button.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    Activity(false);
+                }
+            });
 
+            button = null;
+            button = (Button) findViewById(R.id.phone);
+            button.setText("Phone: "+intent.getStringExtra(MainActivitySecond._phone_intent));
+            button.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    Activity(false);
+                }
+            });
+
+            button = null;
+            button = (Button) findViewById(R.id.date);
+            button.setText("Date: "+intent.getStringExtra(MainActivitySecond._date_intent));
+            button.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    Activity(false);
+                }
+            });
+
+            button = null;
+            button = (Button) findViewById(R.id.sex);
+            button.setText("Sex: "+intent.getStringExtra(MainActivitySecond._sex_intent));
+            button.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    Activity(false);
+                }
+            });
+
+            Data.JSONSerialise("/data/data/rdp.fit.bstu.application/", "JSON.json", Data.Instance);
         }catch (Exception exception){
             System.out.println("MainActivityThird\t"+exception.getMessage());
             textView.setText(exception.getMessage());
         }
+    }
+    protected void Activity(boolean value){
+        Intent intent = new Intent(this, value == true ? MainActivity.class : MainActivitySecond.class);
+        startActivity(intent);
     }
     @Override
     protected void onPause() {

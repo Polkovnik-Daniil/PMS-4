@@ -14,42 +14,45 @@ import android.widget.TextView;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class MainActivitySecond extends AppCompatActivity {
-    private static Button next = null;
-    private static TextInputLayout name = null, surname = null;
-    private static TextView textView = null;
-    private static RadioGroup radioGroup = null;
-    private static Button email = null;
     private static Intent intent = null, nextIntent = null;
-    private static EditText editText = null, editTextFirst= null;
-
     public static Bundle SavedInstanceState = null;
+    public static final String _passportnumber_intent = "passportnumber";
+    public static final String _date_intent = "date";
+    public static final String _sex_intent = "sex";
+    public static final String _phone_intent = "phone";
 
-    private static String passportnumberS = null, dateS = null, sexS = null;
-    public static String EXTRA_PASSPORTNUMBER = "EXTRA_PASSPORTNUMBER";
-    public static String EXTRA_DATE = "EXTRA_DATE";
-    public static String EXTRA_SEX = "EXTRA_SEX";
 
-    public static DATA data = null;
+    public static Data data = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_second);
-        data = DATA.getInstance();
+        data = data.Instance;
         intent = getIntent();
 
         SavedInstanceState = savedInstanceState;
 
-        radioGroup = findViewById(R.id.radioGroup);
+        EditText editText = (EditText)findViewById(R.id.date);
+        editText.setText(data._date);
 
-        next = (Button) findViewById(R.id.nextMAF2);
+        editText = (EditText)findViewById(R.id.passportnumber);
+        editText.setText(data._passportnumber);
+
+        editText = (EditText)findViewById(R.id.Phone);
+        editText.setText(data._phone);
+
+        RadioGroup radioGroup = findViewById(R.id.radioGroup);
+        radioGroup.check(data._married == true ? 0 : 1);
+
+        Button next = (Button) findViewById(R.id.nextMAF2);
         next.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 MainActivityThird();
             }
         });
-        email = findViewById(R.id.email);
+        Button email = findViewById(R.id.email);
         email.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -62,25 +65,32 @@ public class MainActivitySecond extends AppCompatActivity {
     }
     public void MainActivityThird(){
         try {
-            nextIntent = new Intent(this, MainActivityThird.class);
+            Intent nextIntent = new Intent(this, MainActivityThird.class);
 
-            editText = findViewById(R.id.passportnumber);
-            passportnumberS = editText.getText().toString();
-            data.passportNumber = passportnumberS;
-            nextIntent.putExtra(EXTRA_PASSPORTNUMBER, passportnumberS);
+            EditText editText = findViewById(R.id.passportnumber);
+            String _passportnumber = editText.getText().toString();
+            data._passportnumber = _passportnumber;
+            nextIntent.putExtra(_passportnumber_intent, _passportnumber);
 
-            editTextFirst = findViewById(R.id.date);
-            dateS = editTextFirst.getText().toString();
-            data.date = dateS;
-            nextIntent.putExtra(EXTRA_DATE, dateS);
+            EditText editTextFirst = findViewById(R.id.date);
+            String date = editTextFirst.getText().toString();
+            data._date = date;
+            nextIntent.putExtra(_date_intent, date);
 
-            sexS = radioGroup.getCheckedRadioButtonId() == 0 ? "Man" : "Woman";
-            data.Sex = radioGroup.getCheckedRadioButtonId() == 0 ? "Man" : "Woman";
-            nextIntent.putExtra(EXTRA_SEX, sexS);
+            EditText editTextPhone = findViewById(R.id.Phone);
+            String phone = editTextFirst.getText().toString();
+            data._phone = phone;
+            nextIntent.putExtra(_phone_intent, data._phone);
 
-            nextIntent.putExtra(MainActivity.EXTRA_MARRIED, intent.getStringExtra(MainActivity.EXTRA_MARRIED));
-            nextIntent.putExtra(MainActivity.EXTRA_SURNAME, intent.getStringExtra(MainActivity.EXTRA_SURNAME));
-            nextIntent.putExtra(MainActivity.EXTRA_NAME, intent.getStringExtra(MainActivity.EXTRA_NAME));
+
+            RadioGroup radioGroup = findViewById(R.id.radioGroup);
+            String sex = radioGroup.getCheckedRadioButtonId() == 0 ? "Man" : "Woman";
+            data._sex = radioGroup.getCheckedRadioButtonId() == 0 ? "Man" : "Woman";
+            nextIntent.putExtra(_sex_intent, sex);
+
+            nextIntent.putExtra(MainActivity._married_intent, intent.getStringExtra(MainActivity._married_intent));
+            nextIntent.putExtra(MainActivity._surname_intent, intent.getStringExtra(MainActivity._surname_intent));
+            nextIntent.putExtra(MainActivity._name_intent, intent.getStringExtra(MainActivity._name_intent));
 
             startActivity(nextIntent);
         }catch (Exception exception){

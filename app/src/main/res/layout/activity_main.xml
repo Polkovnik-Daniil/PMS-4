@@ -79,7 +79,7 @@
         android:id="@+id/textView"
         android:layout_width="171dp"
         android:layout_height="56dp"
-        android:text="TextView"
+        android:text=""
         android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,63 +1,47 @@
 package rdp.fit.bstu.application;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
-
-import org.json.JSONException;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 public class MainActivity extends Activity {
-    private static Button next = null;
-    private static TextInputLayout name = null, surname = null;
-    private TextView textView = null;
-    private static String nameS = null, surnameS = null;
+    public static final String _name_intent = "name";
+    public static final String _surname_intent = "surname";
+    public static final String _married_intent = "married";
+
     private static Intent intent = null;
-    private static boolean married = false;
-    public static String EXTRA_NAME = "EXTRA_NAME";
-    public static String EXTRA_SURNAME = "EXTRA_SURNAME";
-    public static String EXTRA_MARRIED = "EXTRA_MARRIED";
-    public static Bundle SavedInstanceState = null;
-    public static DATA data = null;
-    public static ArrayList<String> list = new ArrayList<String>();
+    public static Data data = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        data = DATA.getInstance();
+        data = Data.getInstance();
         try {
-            DATA.DeSerializable();
-        } catch (IOException | JSONException e) {
+            Data.JSONDeserialise("/data/data/rdp.fit.bstu.application/", "JSON.json");
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        next = (Button) findViewById(R.id.nextMAF1);
+        Button next = (Button) findViewById(R.id.nextMAF1);
         next.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 MainActivitySecond();
             }
         });
-        name = findViewById(R.id.name);
-        name.getEditText().setText(data.name);
-        surname = findViewById(R.id.surname);
-        surname.getEditText().setText(data.surName);
+        TextInputLayout name = findViewById(R.id.name);
+        name.getEditText().setText(data._name);//data._name
+        TextInputLayout surname = findViewById(R.id.surname);
+        surname.getEditText().setText(data._surname);//data._surname
         CheckBox married =  findViewById(R.id.married);
-        married.setChecked(data.Married == "true" ? true : false);
+        married.setChecked(data._married);//data._married
     }
     public void onClickPhoto(View view){
         try{
@@ -67,32 +51,31 @@ public class MainActivity extends Activity {
                 startActivityForResult(intent, 1);
         }
         }catch (Exception exception){
-            textView = (TextView) findViewById(R.id.textView);
+            TextView textView = (TextView) findViewById(R.id.textView);
             textView.setText("!WAS CLICKED!");
         }
 
     }
 
     public void MainActivitySecond(){
-        name = findViewById(R.id.name);
-        surname = findViewById(R.id.surname);
-        data = DATA.getInstance();
-        data.name = name.getEditText().getText().toString();
-        nameS = data.name;
-        data.surName = surname.getEditText().getText().toString();
-        surnameS = data.surName;
+        TextInputLayout name = findViewById(R.id.name);
+        TextInputLayout surname = findViewById(R.id.surname);
+
+        data = Data.Instance;
+        data._name = name.getEditText().getText().toString();
+        data._surname = surname.getEditText().getText().toString();
 
         intent = new Intent(this, MainActivitySecond.class);
 
-        intent.putExtra(EXTRA_NAME, nameS);
-        intent.putExtra(EXTRA_SURNAME, surnameS);
-        intent.putExtra(EXTRA_MARRIED, married == true ? "true" : "false");
+        intent.putExtra(_name_intent, data._name);
+        intent.putExtra(_surname_intent, data._surname);
+        intent.putExtra(_married_intent, data._married);
 
         startActivity(intent);
     }
 
     public void onCheckBox(View view) {
-        married = !married;
+        data._married = !data._married;
     }
 
     @Override
@@ -114,38 +97,32 @@ public class MainActivity extends Activity {
     }
 
     public void Save(){
-        name = findViewById(R.id.name);
-        surname = findViewById(R.id.surname);
-//        nameS = name.getEditText().getText().toString();
-        data.name = name.getEditText().getText().toString();
-//        surnameS = surname.getEditText().getText().toString();
-        data.surName = surname.getEditText().getText().toString();
-        data.Married = married == true ? "true" : "false";
+        TextInputLayout name = findViewById(R.id.name);
+        TextInputLayout surname = findViewById(R.id.surname);
+        data._name = name.getEditText().getText().toString();
+        data._surname = surname.getEditText().getText().toString();
     }
 
     protected void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
         Save();
-        outState.putString("nameS", data.name);//nameS
-        outState.putString("surnameS", data.surName);//surnameS
-        outState.putString("married", married == true ? "true" : "false");
+        outState.putString(_name_intent, data._name);
+        outState.putString(_surname_intent, data._surname);
+        outState.putString(_married_intent, data._married == true ? "true" : "false");
     }
 
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        //        nameS = savedInstanceState.getString("nameS");
-        data.name = savedInstanceState.getString("nameS");
-//        surnameS = savedInstanceState.getString("surnameS");
-        data.surName = savedInstanceState.getString("surnameS");
-        married = savedInstanceState.getString("married") == "true" ? true : false;
-        data.Married = married == true ? "true" : "false";
-        name = findViewById(R.id.name);
-        surname = findViewById(R.id.surname);
+        data._name = savedInstanceState.getString(_name_intent);
+        data._surname = savedInstanceState.getString(_surname_intent);
+        data._married = savedInstanceState.getString(_married_intent) == "true" ? true : false;
+        TextInputLayout name = findViewById(R.id.name);
+        TextInputLayout surname = findViewById(R.id.surname);
 
-        name.getEditText().setText(data.name);//nameS
-        surname.getEditText().setText(data.surName);//surnameS
+        name.getEditText().setText(data._name);
+        surname.getEditText().setText(data._surname);
 
         CheckBox checkBox = findViewById(R.id.married);
-        checkBox.setChecked(data.Married == "true" ? true : false);//married
+        checkBox.setChecked(data._married);
     }
 }
