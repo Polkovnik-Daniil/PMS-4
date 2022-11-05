@@ -1,6 +1,7 @@
 package rdp.fit.bstu.application;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +32,7 @@ public class Data {
     public String _surname = "surname";
     public boolean _married = false;
     public String _passportnumber = "";
+    //public Bitmap _picture = null;
     //endregion
     //region Singleton
     public static Data getInstance(){

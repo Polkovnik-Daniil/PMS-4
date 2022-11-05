@@ -3,6 +3,7 @@ package rdp.fit.bstu.application;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +26,7 @@ public class MainActivityThird extends AppCompatActivity {
             Intent intent = getIntent();
             //можно занести в метод итд но мне лень
             Button button = (Button) findViewById(R.id.name);
-            button.setText("Name: "+intent.getStringExtra(MainActivity._name_intent));
+            button.setText("Name: " + intent.getStringExtra(MainActivity._name_intent));
             button.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
@@ -43,9 +44,10 @@ public class MainActivityThird extends AppCompatActivity {
                 }
             });
 
+            Bundle passedDate = getIntent().getExtras();
             button = null;
             button = (Button) findViewById(R.id.married);
-            button.setText("married: "+intent.getStringExtra(MainActivity._married_intent));
+            button.setText("married: " + (passedDate.getBoolean(MainActivity._married_intent) == true ? " Not Married" : "Married"));
             button.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
@@ -66,12 +68,6 @@ public class MainActivityThird extends AppCompatActivity {
             button = null;
             button = (Button) findViewById(R.id.phone);
             button.setText("Phone: "+intent.getStringExtra(MainActivitySecond._phone_intent));
-            button.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View view) {
-                    Activity(false);
-                }
-            });
 
             button = null;
             button = (Button) findViewById(R.id.date);
@@ -85,7 +81,7 @@ public class MainActivityThird extends AppCompatActivity {
 
             button = null;
             button = (Button) findViewById(R.id.sex);
-            button.setText("Sex: "+intent.getStringExtra(MainActivitySecond._sex_intent));
+            button.setText("Sex: " + intent.getStringExtra(MainActivitySecond._sex_intent));
             button.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
@@ -102,6 +98,13 @@ public class MainActivityThird extends AppCompatActivity {
     protected void Activity(boolean value){
         Intent intent = new Intent(this, value == true ? MainActivity.class : MainActivitySecond.class);
         startActivity(intent);
+    }
+    public void onClickPhone(View view){
+        Button phonenum = (Button)findViewById(R.id.phone);
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phonenum.getText().toString()));
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
     @Override
     protected void onPause() {
